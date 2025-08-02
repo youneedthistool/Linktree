@@ -90,7 +90,7 @@
 
     // Função para logar clique
     function logClick(el) {
-      db.collection("clicks").add({
+      db.collection("cliquesLanding").add({
         platform: el.dataset.platform || "unknown",
         trackingId: el.dataset.trackingid || "none",
         productId: el.dataset.productid || "none",
