@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="YouNeedThisTool — Curated tools and smart deals" />
   <meta name="affiliate-disclosure" content="This site uses affiliate links and may earn commissions." />
   <title>YouNeedThisTool | All Links</title>
+
   <link rel="stylesheet" href="css/main.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="js/main.js" defer></script>
+
+  <!-- Firebase SDKs (não modular) -->
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore.js"></script>
 </head>
 <body>
   <div class="main-wrapper">
@@ -67,14 +71,47 @@
     © 2025 YouNeedThisTool — All Rights Reserved
   </footer>
 
-  <script type="module">
-    import { trackRedirect } from './js/tracking.js';
+  <script>
+    // Configuração Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDY4ripKlTwQ8n7gsabBibq5e6Mtlei9EU",
+      authDomain: "youneedthistool-93178.firebaseapp.com",
+      projectId: "youneedthistool-93178",
+      storageBucket: "youneedthistool-93178.firebasestorage.app",
+      messagingSenderId: "844231154258",
+      appId: "1:844231154258:web:5fef186c9ebd3adcec9d8b",
+      measurementId: "G-9FG1PV7TX4"
+    };
 
-    // Delegation: adiciona event listener global para capturar todos os clicks em links que tenham dados de tracking
-    document.addEventListener('click', (e) => {
+    // Inicializa Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Função para logar clique
+    async function logClick(el) {
+      try {
+        await db.collection("clicks").add({
+          platform: el.dataset.platform || "unknown",
+          trackingId: el.dataset.trackingid || "none",
+          productId: el.dataset.productid || "none",
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          referrer: document.referrer,
+          screenWidth: window.innerWidth,
+          screenHeight: window.innerHeight,
+          language: navigator.language
+        });
+        console.log("Click logged:", el.dataset.platform);
+      } catch (e) {
+        console.error("Error logging click:", e);
+      }
+    }
+
+    // Captura clique em links com dados para tracking
+    document.addEventListener('click', function(e) {
       const el = e.target.closest('a[data-platform]');
       if (el) {
-        trackRedirect(el);
+        logClick(el);
       }
     });
   </script>
