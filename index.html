@@ -9,10 +9,6 @@
   <link rel="stylesheet" href="css/main.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <script src="js/main.js" defer></script>
-  
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore.js"></script>
 </head>
 <body>
   <div class="main-wrapper">
@@ -26,38 +22,32 @@
         </p>
 
         <a href="https://www.tiktok.com/@youneedthistoolz" class="link-button" target="_blank"
-           data-platform="tiktok" data-trackingid="linktree" data-productid="tiktok_tool"
-           onclick="trackRedirect(this)">
+           data-platform="tiktok" data-trackingid="linktree" data-productid="tiktok_tool">
           <img src="assets/icons/tiktok.png" class="icon" alt="TikTok" /> TikTok
         </a>
 
         <a href="https://instagram.com/youneedthistoolz" class="link-button" target="_blank"
-           data-platform="instagram" data-trackingid="linktree" data-productid="insta_tool"
-           onclick="trackRedirect(this)">
+           data-platform="instagram" data-trackingid="linktree" data-productid="insta_tool">
           <img src="assets/icons/instagram.png" class="icon" alt="Instagram" /> Instagram
         </a>
 
         <a href="https://youtube.com/@YouNeedThisTools" class="link-button" target="_blank"
-           data-platform="youtube" data-trackingid="linktree" data-productid="youtube_tool"
-           onclick="trackRedirect(this)">
+           data-platform="youtube" data-trackingid="linktree" data-productid="youtube_tool">
           <img src="assets/icons/youtube.png" class="icon" alt="YouTube" /> YouTube
         </a>
 
         <a href="https://x.com/youneedthistool" class="link-button" target="_blank"
-           data-platform="x" data-trackingid="linktree" data-productid="x_tool"
-           onclick="trackRedirect(this)">
+           data-platform="x" data-trackingid="linktree" data-productid="x_tool">
           <img src="assets/icons/x.png" class="icon" alt="X" /> X 
         </a>
 
         <a href="https://pinterest.com/youneedthistools" class="link-button" target="_blank"
-           data-platform="pinterest" data-trackingid="linktree" data-productid="pinterest_tool"
-           onclick="trackRedirect(this)">
+           data-platform="pinterest" data-trackingid="linktree" data-productid="pinterest_tool">
           <img src="assets/icons/pinterest.png" class="icon" alt="Pinterest" /> Pinterest
         </a>
 
         <a href="mailto:youneedthistools@gmail.com" class="link-button"
-           data-platform="email" data-trackingid="linktree" data-productid="email_tool"
-           onclick="trackRedirect(this)">
+           data-platform="email" data-trackingid="linktree" data-productid="email_tool">
           <img src="assets/icons/mail.png" class="icon" alt="Email" /> Contact Us
         </a>
 
@@ -77,7 +67,16 @@
     © 2025 YouNeedThisTool — All Rights Reserved
   </footer>
 
-  <!-- Seu script tracking.js externo -->
-  <script src="js/tracking.js"></script>
+  <script type="module">
+    import { trackRedirect } from './js/tracking.js';
+
+    // Delegation: adiciona event listener global para capturar todos os clicks em links que tenham dados de tracking
+    document.addEventListener('click', (e) => {
+      const el = e.target.closest('a[data-platform]');
+      if (el) {
+        trackRedirect(el);
+      }
+    });
+  </script>
 </body>
 </html>
