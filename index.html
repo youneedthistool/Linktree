@@ -88,13 +88,24 @@
     firebase.initializeApp(firebaseConfig);
     var db = firebase.firestore();
 
+    // Função para formatar timestamp local
+    function getLocalTimestamp() {
+      const now = new Date();
+      return now.getFullYear() + '-' +
+        String(now.getMonth() + 1).padStart(2, '0') + '-' +
+        String(now.getDate()).padStart(2, '0') + ' ' +
+        String(now.getHours()).padStart(2, '0') + ':' +
+        String(now.getMinutes()).padStart(2, '0') + ':' +
+        String(now.getSeconds()).padStart(2, '0');
+    }
+
     // Função para logar clique
     function logClick(el) {
       db.collection("cliquesLanding").add({
         platform: el.dataset.platform || "unknown",
         trackingId: el.dataset.trackingid || "none",
         productId: el.dataset.productid || "none",
-        timestamp: new Date().toISOString(),
+        timestamp: getLocalTimestamp(),
         userAgent: navigator.userAgent,
         referrer: document.referrer,
         screenWidth: window.innerWidth,
