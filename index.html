@@ -9,16 +9,18 @@
 
   <link rel="stylesheet" href="css/main.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-
-  <!-- Firebase compatível com uso global -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
 </head>
 <body>
   <div class="main-wrapper">
     <div class="content-left">
-      <img src="assets/images/avatar_linktree.png" alt="Logo" class="banner" />
+      <img src="assets/images/avatar_linktree.webp"
+           alt="Logo"
+           width="179"
+           height="179"
+           fetchpriority="high"
+           loading="eager"
+           decoding="async"
+           class="banner" />
 
       <div class="content-box">
         <p class="description">
@@ -64,7 +66,7 @@
     </div>
 
     <div class="qr-wrapper">
-      <img src="assets/icons/qrCode.png" alt="QR Code" class="qr-code" />
+      <img src="assets/icons/qrCode.png" alt="QR Code" class="qr-code" loading="lazy" decoding="async" />
     </div>
   </div>
 
@@ -72,58 +74,60 @@
     © 2025 YouNeedThisTool — All Rights Reserved
   </footer>
 
+  <!-- Firebase (deferido para não bloquear renderização) -->
+  <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <!-- Script principal -->
   <script>
-    // Configuração Firebase
-    var firebaseConfig = {
-      apiKey: "AIzaSyDY4ripKlTwQ8n7gsabBibq5e6Mtlei9EU",
-      authDomain: "youneedthistool-93178.firebaseapp.com",
-      projectId: "youneedthistool-93178",
-      storageBucket: "youneedthistool-93178.firebasestorage.app",
-      messagingSenderId: "844231154258",
-      appId: "1:844231154258:web:5fef186c9ebd3adcec9d8b",
-      measurementId: "G-9FG1PV7TX4"
-    };
+    document.addEventListener("DOMContentLoaded", function () {
+      var firebaseConfig = {
+        apiKey: "AIzaSyDY4ripKlTwQ8n7gsabBibq5e6Mtlei9EU",
+        authDomain: "youneedthistool-93178.firebaseapp.com",
+        projectId: "youneedthistool-93178",
+        storageBucket: "youneedthistool-93178.firebasestorage.app",
+        messagingSenderId: "844231154258",
+        appId: "1:844231154258:web:5fef186c9ebd3adcec9d8b",
+        measurementId: "G-9FG1PV7TX4"
+      };
 
-    // Inicializa Firebase
-    firebase.initializeApp(firebaseConfig);
-    var db = firebase.firestore();
+      firebase.initializeApp(firebaseConfig);
+      var db = firebase.firestore();
 
-    // Função para formatar timestamp local
-    function getLocalTimestamp() {
-      const now = new Date();
-      return now.getFullYear() + '-' +
-        String(now.getMonth() + 1).padStart(2, '0') + '-' +
-        String(now.getDate()).padStart(2, '0') + ' ' +
-        String(now.getHours()).padStart(2, '0') + ':' +
-        String(now.getMinutes()).padStart(2, '0') + ':' +
-        String(now.getSeconds()).padStart(2, '0');
-    }
-
-    // Função para logar clique
-    function logClick(el) {
-      db.collection("cliquesLanding").add({
-        platform: el.dataset.platform || "unknown",
-        trackingId: el.dataset.trackingid || "none",
-        productId: el.dataset.productid || "none",
-        timestamp: getLocalTimestamp(),
-        userAgent: navigator.userAgent,
-        referrer: document.referrer,
-        screenWidth: window.innerWidth,
-        screenHeight: window.innerHeight,
-        language: navigator.language
-      }).then(function () {
-        console.log("Click logged:", el.dataset.platform);
-      }).catch(function (error) {
-        console.error("Error logging click:", error);
-      });
-    }
-
-    // Captura clique em links com data attributes
-    document.addEventListener('click', function(e) {
-      var el = e.target.closest('a[data-platform]');
-      if (el) {
-        logClick(el);
+      function getLocalTimestamp() {
+        const now = new Date();
+        return now.getFullYear() + '-' +
+          String(now.getMonth() + 1).padStart(2, '0') + '-' +
+          String(now.getDate()).padStart(2, '0') + ' ' +
+          String(now.getHours()).padStart(2, '0') + ':' +
+          String(now.getMinutes()).padStart(2, '0') + ':' +
+          String(now.getSeconds()).padStart(2, '0');
       }
+
+      function logClick(el) {
+        db.collection("cliquesLanding").add({
+          platform: el.dataset.platform || "unknown",
+          trackingId: el.dataset.trackingid || "none",
+          productId: el.dataset.productid || "none",
+          timestamp: getLocalTimestamp(),
+          userAgent: navigator.userAgent,
+          referrer: document.referrer,
+          screenWidth: window.innerWidth,
+          screenHeight: window.innerHeight,
+          language: navigator.language
+        }).then(function () {
+          console.log("Click logged:", el.dataset.platform);
+        }).catch(function (error) {
+          console.error("Error logging click:", error);
+        });
+      }
+
+      document.addEventListener('click', function (e) {
+        var el = e.target.closest('a[data-platform]');
+        if (el) {
+          logClick(el);
+        }
+      });
     });
   </script>
 </body>
